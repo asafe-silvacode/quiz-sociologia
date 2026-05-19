@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz de Sociologia</title>
+  <link rel="shortcut icon" href="https://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/256/Status-mail-task-icon.png" type="image/x-icon">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- SVG DEFS (ícones reutilizáveis) -->
+  <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="ico-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </symbol>
+    <symbol id="ico-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+    </symbol>
+    <symbol id="ico-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+    </symbol>
+    <symbol id="ico-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+    </symbol>
+    <symbol id="ico-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+      <line x1="1" y1="1" x2="23" y2="23"/>
+    </symbol>
+    <symbol id="ico-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+    </symbol>
+    <symbol id="ico-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="5 3 19 12 5 21 5 3"/>
+    </symbol>
+    <symbol id="ico-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.81"/>
+    </symbol>
+    <symbol id="ico-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+    </symbol>
+    <symbol id="ico-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="8 21 12 17 16 21"/>
+      <line x1="12" y1="17" x2="12" y2="11"/>
+      <path d="M7 4H4a1 1 0 0 0 0 8c1.5 0 2.5-.5 3-1"/>
+      <path d="M17 4h3a1 1 0 0 1 0 8c-1.5 0-2.5-.5-3-1"/>
+      <rect x="7" y="2" width="10" height="10" rx="1"/>
+    </symbol>
+    <symbol id="ico-medal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="15" r="6"/>
+      <path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/>
+    </symbol>
+    <symbol id="ico-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+      <circle cx="9" cy="7" r="4"/>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </symbol>
+    <symbol id="ico-hand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/>
+      <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/>
+      <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/>
+      <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
+    </symbol>
+    <symbol id="ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+    </symbol>
+    <symbol id="ico-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+    </symbol>
+  </svg>
+
+  <!-- ══ TELA DO JOGO ══ -->
+  <div class="page" id="tela-jogo">
+    <div class="container-lg" style="max-width:820px;">
+
+      <!-- TOP BAR -->
+      <div class="quiz-topbar fade-in-up">
+        <a href="index.html" class="back-btn" title="Sair da partida" onclick="return confirm('Sair da partida atual?')">
+          <svg viewBox="0 0 24 24"><use href="#ico-close"/></svg>
+        </a>
+        <div class="progress-info" id="progresso-label">1 / 10</div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="progress-bar" style="width:10%"></div>
+        </div>
+        <div class="progress-info" id="modo-label" style="display:flex;align-items:center;gap:6px;">
+          <svg width="13" height="13" viewBox="0 0 24 24"><use href="#ico-users"/></svg>
+        </div>
+      </div>
+
+      <!-- SCOREBOARD GRUPOS -->
+      <div id="scoreboard" class="scoreboard hidden"></div>
+
+      <!-- TURN INDICATOR -->
+      <div id="turn-indicator" class="turn-indicator hidden">
+        <div class="turn-dot"></div>
+        <svg viewBox="0 0 24 24"><use href="#ico-users"/></svg>
+        <span id="turn-label"></span>
+      </div>
+
+      <!-- CARD DA QUESTÃO -->
+      <div class="card" id="card-questao">
+
+        <!-- Enunciado -->
+        <div id="enunciado-wrap">
+          <div class="question-number" id="q-numero">Questão 1</div>
+          <div class="question-text" id="q-texto"></div>
+          <div style="display:flex;justify-content:center;">
+            <button class="btn btn-primary btn-lg" id="btn-responder" onclick="mostrarAlternativas()">
+              <svg viewBox="0 0 24 24"><use href="#ico-hand"/></svg>
+              Responder
+            </button>
+          </div>
+        </div>
+
+        <!-- Timer + Alternativas -->
+        <div id="alternativas-wrap" class="hidden">
+          <div class="timer-ring-wrap">
+            <div class="timer-ring">
+              <svg viewBox="0 0 70 70" width="76" height="76">
+                <circle class="bg" cx="35" cy="35" r="32"/>
+                <circle class="fg" id="timer-arc" cx="35" cy="35" r="32"
+                  stroke-dasharray="201" stroke-dashoffset="0"/>
+              </svg>
+              <div class="timer-value" id="timer-val">20</div>
+            </div>
+          </div>
+
+          <div class="alternatives-grid" id="grid-alternativas"></div>
+
+          <div class="reveal-feedback" id="reveal-feedback"></div>
+
+          <div class="action-row">
+            <button class="btn btn-outline" id="btn-revelar" onclick="toggleRevelar()">
+              <svg viewBox="0 0 24 24"><use href="#ico-eye"/></svg>
+              Revelar Resposta
+            </button>
+            <button class="btn btn-secondary hidden" id="btn-proxima" onclick="proximaRodada()">
+              Próxima
+              <svg viewBox="0 0 24 24"><use href="#ico-arrow-right"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ RESULTADO SOLO ══ -->
+  <div class="page hidden" id="tela-resultado-solo">
+    <div class="container text-center">
+      <div class="card fade-in-up">
+        <div style="display:flex;justify-content:center;margin-bottom:16px;">
+          <div style="width:56px;height:56px;border-radius:50%;background:rgba(29,86,176,0.2);border:1px solid rgba(46,115,216,0.35);display:flex;align-items:center;justify-content:center;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--blue-200)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <use href="#ico-trophy"/>
+            </svg>
+          </div>
+        </div>
+        <div class="eyebrow mb-8">Resultado Final</div>
+        <div class="display-title" style="font-size:1.8rem;">Partida Encerrada</div>
+        <div class="result-score-big" id="solo-pontos">0</div>
+        <div class="result-label">pontos de <span id="solo-total"></span></div>
+        <div id="solo-pct" style="margin-top:10px;font-size:0.78rem;color:var(--blue-200);"></div>
+        <div class="divider"></div>
+        <div class="action-row" style="justify-content:center;">
+          <a href="index.html" class="btn btn-secondary">
+            <svg viewBox="0 0 24 24"><use href="#ico-home"/></svg>
+            Menu
+          </a>
+          <button class="btn btn-primary" onclick="reiniciarSolo()">
+            <svg viewBox="0 0 24 24"><use href="#ico-refresh"/></svg>
+            Jogar Novamente
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PÓDIO ══ -->
+  <div class="page hidden" id="tela-podio">
+    <div class="container text-center podium-page">
+      <div class="fade-in-up">
+        <div class="eyebrow mb-8">Resultado Final</div>
+        <h1 class="display-title">Pódio dos <em>Grupos</em></h1>
+      </div>
+      <div class="podium-wrap" id="podium-wrap"></div>
+      <div class="fade-in-up" style="animation-delay:0.5s;">
+        <div id="podium-scores" class="card card-sm" style="text-align:left;margin-top:0;"></div>
+        <div class="action-row mt-24" style="justify-content:center;">
+          <a href="index.html" class="btn btn-secondary">
+            <svg viewBox="0 0 24 24"><use href="#ico-home"/></svg>
+            Menu
+          </a>
+          <button class="btn btn-primary" onclick="reiniciarGrupos()">
+            <svg viewBox="0 0 24 24"><use href="#ico-refresh"/></svg>
+            Nova Partida
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    if (!loadState() || !STATE.tema || !STATE.questoes?.length) {
+      window.location.href = 'index.html';
+    }
+
+    let REVEAL_ON = false;
+    const TIMER_MAX = 20;
+    const CIRCUM = 201;
+
+    /* ── MEDALHAS SVG ── */
+    const MEDALHAS = {
+      m1: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+             <circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
+           </svg>`,
+      m2: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+             <circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
+           </svg>`,
+      m3: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+             <circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
+           </svg>`
+    };
+
+    /* ── INIT ── */
+    function init() {
+      const modoLabel = document.getElementById('modo-label');
+      modoLabel.innerHTML = STATE.modo === 'grupos'
+        ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--blue-200)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ico-users"/></svg>&nbsp;${STATE.grupos.length} grupos`
+        : `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--blue-200)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>&nbsp;Solo`;
+
+      if (STATE.modo === 'grupos') {
+        document.getElementById('scoreboard').classList.remove('hidden');
+        document.getElementById('turn-indicator').classList.remove('hidden');
+      }
+      renderScoreboard();
+      renderQuestao();
+    }
+
+    /* ── SCOREBOARD ── */
+    function renderScoreboard() {
+      if (STATE.modo !== 'grupos') return;
+      document.getElementById('scoreboard').innerHTML = STATE.grupos.map((g, i) => `
+        <div class="score-chip ${i === STATE.grupoAtual ? 'active' : ''}">
+          <span class="score-chip-name">${g.nome}</span>
+          <span class="score-chip-pts">${g.pontos} pts</span>
+        </div>`).join('');
+      document.getElementById('turn-label').textContent = `Vez de: ${STATE.grupos[STATE.grupoAtual].nome}`;
+    }
+
+    /* ── QUESTÃO ── */
+    function renderQuestao() {
+      const q     = STATE.questoes[STATE.questaoIdx];
+      const total = STATE.questoes.length;
+      const atual = STATE.questaoIdx + 1;
+
+      document.getElementById('progresso-label').textContent = `${atual} / ${total}`;
+      document.getElementById('progress-bar').style.width = `${(atual / total) * 100}%`;
+      document.getElementById('q-numero').textContent = `Questão ${atual}`;
+      document.getElementById('q-texto').innerHTML = q.enunciado;
+
+      document.getElementById('enunciado-wrap').classList.remove('hidden');
+      document.getElementById('btn-responder').classList.remove('hidden');
+      document.getElementById('alternativas-wrap').classList.add('hidden');
+      document.getElementById('reveal-feedback').style.display = 'none';
+      document.getElementById('btn-proxima').classList.add('hidden');
+
+      const btnRev = document.getElementById('btn-revelar');
+      btnRev.innerHTML = `<svg viewBox="0 0 24 24"><use href="#ico-eye"/></svg> Revelar Resposta`;
+      REVEAL_ON = false;
+
+      STATE.respondeu = false;
+      STATE.revelado  = false;
+      STATE.escolha   = null;
+      stopTimer();
+
+      const arc = document.getElementById('timer-arc');
+      arc.style.strokeDashoffset = 0;
+      arc.classList.remove('urgent');
+      const tv = document.getElementById('timer-val');
+      tv.classList.remove('urgent');
+      tv.textContent = TIMER_MAX;
+    }
+
+    /* ── MOSTRAR ALTERNATIVAS ── */
+    function mostrarAlternativas() {
+      const q = STATE.questoes[STATE.questaoIdx];
+      STATE.alternativasOrdem = shuffle(q.alternativas);
+      document.getElementById('grid-alternativas').innerHTML =
+        STATE.alternativasOrdem.map((alt, i) => `
+          <button class="alt-btn slide-in" style="animation-delay:${i * 0.06}s"
+            id="alt-${alt.letra}" onclick="selecionar('${alt.letra}')">
+            <span class="alt-letter">${alt.letra}</span>
+            <span>${alt.texto}</span>
+          </button>`).join('');
+
+      document.getElementById('btn-responder').classList.add('hidden');
+      document.getElementById('alternativas-wrap').classList.remove('hidden');
+      iniciarTimer();
+    }
+
+    /* ── TIMER ── */
+    function iniciarTimer() {
+      STATE.timerSecs = TIMER_MAX;
+      const arc = document.getElementById('timer-arc');
+      const tv  = document.getElementById('timer-val');
+      arc.classList.remove('urgent'); tv.classList.remove('urgent');
+
+      STATE.timerInterval = setInterval(() => {
+        STATE.timerSecs--;
+        if (STATE.timerSecs < 0) STATE.timerSecs = 0;
+        arc.style.strokeDashoffset = CIRCUM * (1 - STATE.timerSecs / TIMER_MAX);
+        tv.textContent = STATE.timerSecs;
+        if (STATE.timerSecs <= 5) { arc.classList.add('urgent'); tv.classList.add('urgent'); }
+        if (STATE.timerSecs <= 0) { stopTimer(); tempoEsgotado(); }
+      }, 1000);
+    }
+
+    /* ── SELECIONAR ── */
+    function selecionar(letra) {
+      if (STATE.respondeu) return;
+      STATE.respondeu = true;
+      STATE.escolha   = letra;
+      stopTimer();
+      document.querySelectorAll('.alt-btn').forEach(b => b.disabled = true);
+      document.getElementById('alt-' + letra).classList.add('selected');
+      document.getElementById('btn-proxima').classList.remove('hidden');
+      saveState();
+    }
+
+    /* ── TEMPO ESGOTADO ── */
+    function tempoEsgotado() {
+      if (STATE.respondeu) return;
+      STATE.respondeu = true;
+      STATE.escolha   = null;
+      document.querySelectorAll('.alt-btn').forEach(b => b.disabled = true);
+      const fb = document.getElementById('reveal-feedback');
+      fb.className = 'reveal-feedback timeout-fb';
+      fb.innerHTML = `<svg viewBox="0 0 24 24"><use href="#ico-clock"/></svg> Tempo esgotado. Nenhuma resposta registrada.`;
+      fb.style.display = 'flex';
+      document.getElementById('btn-proxima').classList.remove('hidden');
+      saveState();
+    }
+
+    /* ── TOGGLE REVELAR ── */
+    function toggleRevelar() {
+      if (!STATE.respondeu) return;
+      REVEAL_ON = !REVEAL_ON;
+      const q      = STATE.questoes[STATE.questaoIdx];
+      const fb     = document.getElementById('reveal-feedback');
+      const btnRev = document.getElementById('btn-revelar');
+
+      if (REVEAL_ON) {
+        btnRev.innerHTML = `<svg viewBox="0 0 24 24"><use href="#ico-eye-off"/></svg> Ocultar Resposta`;
+        document.querySelectorAll('.alt-btn').forEach(b => {
+          b.classList.remove('correct', 'wrong');
+          const l = b.id.replace('alt-', '');
+          if (l === q.correta) b.classList.add('correct');
+          else if (l === STATE.escolha) b.classList.add('wrong');
+        });
+
+        if (STATE.escolha === null) {
+          fb.className = 'reveal-feedback timeout-fb';
+          fb.innerHTML = `<svg viewBox="0 0 24 24"><use href="#ico-clock"/></svg> Tempo esgotado. A resposta correta era <strong>${q.correta}</strong>.`;
+        } else if (STATE.escolha === q.correta) {
+          fb.className = 'reveal-feedback correct-fb';
+          fb.innerHTML = `<svg viewBox="0 0 24 24"><use href="#ico-check"/></svg> Correto! A resposta é <strong>${q.correta}</strong>.`;
+        } else {
+          fb.className = 'reveal-feedback wrong-fb';
+          fb.innerHTML = `<svg viewBox="0 0 24 24"><use href="#ico-x"/></svg> Incorreto. A resposta correta era <strong>${q.correta}</strong>.`;
+        }
+        fb.style.display = 'flex';
+        STATE.revelado = true;
+      } else {
+        btnRev.innerHTML = `<svg viewBox="0 0 24 24"><use href="#ico-eye"/></svg> Revelar Resposta`;
+        fb.style.display = 'none';
+        document.querySelectorAll('.alt-btn').forEach(b => {
+          b.classList.remove('correct', 'wrong');
+        });
+        if (STATE.escolha) document.getElementById('alt-' + STATE.escolha)?.classList.add('selected');
+      }
+      saveState();
+    }
+
+    /* ── PRÓXIMA ── */
+    function proximaRodada() {
+      const q = STATE.questoes[STATE.questaoIdx];
+
+      // Pontua o grupo/jogador atual se acertou
+      if (STATE.escolha === q.correta) {
+        STATE.grupos[STATE.grupoAtual].pontos += 10;
+        launchConfetti(1800);
+        renderScoreboard();
+      }
+
+      if (STATE.modo === 'grupos') {
+        STATE.grupoAtual = (STATE.grupoAtual + 1) % STATE.grupos.length;
+      }
+      STATE.questaoIdx++;
+      if (STATE.questaoIdx >= STATE.questoes.length) {
+        encerrar();
+      } else {
+        renderScoreboard();
+        renderQuestao();
+        saveState();
+      }
+    }
+
+    /* ── ENCERRAR ── */
+    function encerrar() {
+      stopTimer();
+      STATE.encerrado = true;
+      saveState();
+      document.getElementById('tela-jogo').classList.add('hidden');
+
+      if (STATE.modo === 'solo') {
+        const pontos = STATE.grupos[0].pontos;
+        const total  = STATE.questoes.length * 10;
+        document.getElementById('solo-pontos').textContent = pontos;
+        document.getElementById('solo-total').textContent  = total;
+        document.getElementById('solo-pct').textContent    = `Aproveitamento: ${Math.round((pontos/total)*100)}%`;
+        document.getElementById('tela-resultado-solo').classList.remove('hidden');
+        launchConfetti(3000);
+      } else {
+        mostrarPodio();
+      }
+    }
+
+    /* ── PÓDIO ── */
+    function mostrarPodio() {
+      document.getElementById('tela-podio').classList.remove('hidden');
+      const sorted = [...STATE.grupos].sort((a,b) => b.pontos - a.pontos);
+      const wrap   = document.getElementById('podium-wrap');
+      const scores = document.getElementById('podium-scores');
+
+      // Disposição visual clássica: 2º, 1º, 3º
+      const ordem   = [sorted[1], sorted[0], sorted[2]].filter(Boolean);
+      const classes = ['p2','p1','p3'];
+      const medalha = ['m2','m1','m3'];
+      const nums    = ['2','1','3'];
+
+      wrap.innerHTML = ordem.map((g, i) => `
+        <div class="podium-col fade-in-up" style="animation-delay:${0.15*i}s">
+          <div class="podium-medal ${medalha[i]}">${MEDALHAS[medalha[i]]}</div>
+          <div class="podium-name">${g ? g.nome : ''}</div>
+          <div class="podium-pts">${g ? g.pontos+' pts' : ''}</div>
+          <div class="podium-block ${classes[i]}">${nums[i]}</div>
+        </div>`).join('');
+
+      scores.innerHTML = `
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue-300)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ico-trophy"/></svg>
+          <span class="label">Placar completo</span>
+        </div>
+        ${sorted.map((g,i) => `
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--w06);">
+            <span style="font-size:0.8rem;color:var(--w70);">${i+1}° &nbsp; ${g.nome}</span>
+            <span style="font-family:var(--font-d);font-weight:700;color:var(--blue-200);">${g.pontos} pts</span>
+          </div>`).join('')}`;
+
+      launchConfetti(4000);
+    }
+
+    /* ── REINICIAR ── */
+    function reiniciarSolo() {
+      STATE.grupos[0].pontos = 0;
+      STATE.questoes   = shuffle(STATE.questoes);
+      STATE.questaoIdx = 0;
+      STATE.encerrado  = false;
+      STATE.grupoAtual = 0;
+      saveState();
+      document.getElementById('tela-resultado-solo').classList.add('hidden');
+      document.getElementById('tela-jogo').classList.remove('hidden');
+      renderQuestao();
+    }
+
+    function reiniciarGrupos() {
+      STATE.grupos.forEach(g => g.pontos = 0);
+      STATE.questoes   = shuffle(STATE.questoes);
+      STATE.questaoIdx = 0;
+      STATE.grupoAtual = 0;
+      STATE.encerrado  = false;
+      saveState();
+      document.getElementById('tela-podio').classList.add('hidden');
+      document.getElementById('tela-jogo').classList.remove('hidden');
+      renderScoreboard();
+      renderQuestao();
+    }
+
+    init();
+  </script>
+</body>
+</html>

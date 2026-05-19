@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configurar Partida — Quiz de Sociologia</title>
+  <link rel="shortcut icon" href="https://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/256/Status-mail-task-icon.png" type="image/x-icon">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="page">
+    <div class="container">
+
+      <div class="header-strip fade-in-up">
+        <a href="index.html" class="back-btn" title="Voltar">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </a>
+        <div>
+          <div class="eyebrow">Configurar Partida</div>
+          <div id="tema-label" style="font-family:var(--font-d);font-size:0.88rem;color:rgba(255,255,255,0.65);margin-top:2px;"></div>
+        </div>
+      </div>
+
+      <div class="card fade-in-up" style="animation-delay:0.08s">
+
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue-300)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+            <path d="M12 8v4l3 3"/>
+          </svg>
+          <span class="label">Modo de jogo</span>
+        </div>
+
+        <div class="mode-grid">
+          <div class="mode-card" id="card-solo" onclick="selecionarModo('solo')">
+            <div class="mode-icon">
+              <!-- Pessoa solo -->
+              <svg viewBox="0 0 24 24">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div class="mode-title">Jogar Sozinho</div>
+            <div class="mode-desc">Partida individual com pontuação pessoal</div>
+          </div>
+
+          <div class="mode-card" id="card-grupos" onclick="selecionarModo('grupos')">
+            <div class="mode-icon">
+              <!-- Grupos -->
+              <svg viewBox="0 0 24 24">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="mode-title">Jogar em Grupos</div>
+            <div class="mode-desc">2 a 8 grupos disputam por turnos</div>
+          </div>
+        </div>
+
+        <!-- CONFIG GRUPOS -->
+        <div id="config-grupos" class="group-config hidden">
+          <div class="divider"></div>
+
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue-300)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+            <span class="label">Número de grupos</span>
+          </div>
+
+          <div class="groups-slider-row">
+            <span>2</span>
+            <input type="range" id="slider-grupos" min="2" max="8" value="2" oninput="atualizarGrupos(this.value)">
+            <span>8</span>
+            <div class="groups-count-badge" id="badge-grupos">2</div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue-300)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+            </svg>
+            <span class="label">Nomes dos grupos</span>
+          </div>
+
+          <div class="groups-names-grid" id="inputs-grupos"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;">
+          <button class="btn btn-secondary" onclick="history.back()">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            Voltar
+          </button>
+          <button id="btn-iniciar" class="btn btn-primary btn-lg" disabled onclick="iniciar()">
+            Iniciar Partida
+            <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    loadState();
+    if (STATE.tema && QUESTOES[STATE.tema]) {
+      document.getElementById('tema-label').textContent = QUESTOES[STATE.tema].titulo;
+    }
+
+    function selecionarModo(modo) {
+      STATE.modo = modo;
+      document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+      document.getElementById('card-' + modo).classList.add('selected');
+      const gc = document.getElementById('config-grupos');
+      if (modo === 'grupos') {
+        gc.classList.remove('hidden');
+        atualizarGrupos(document.getElementById('slider-grupos').value);
+      } else {
+        gc.classList.add('hidden');
+        STATE.grupos = [{ nome: 'Jogador', pontos: 0 }];
+      }
+      document.getElementById('btn-iniciar').disabled = false;
+    }
+
+    function atualizarGrupos(n) {
+      n = parseInt(n);
+      document.getElementById('badge-grupos').textContent = n;
+      const nomesAtuais = Array.from(document.querySelectorAll('.group-name-input')).map(i => i.value);
+      const container  = document.getElementById('inputs-grupos');
+      container.innerHTML = '';
+      for (let i = 0; i < n; i++) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'group-name-input';
+        input.placeholder = `Grupo ${i + 1}`;
+        input.value = nomesAtuais[i] || '';
+        container.appendChild(input);
+      }
+    }
+
+    function iniciar() {
+      if (!STATE.modo) return;
+      if (STATE.modo === 'grupos') {
+        const inputs = document.querySelectorAll('.group-name-input');
+        STATE.grupos = Array.from(inputs).map((inp, i) => ({
+          nome: inp.value.trim() || `Grupo ${i + 1}`, pontos: 0
+        }));
+      } else {
+        STATE.grupos = [{ nome: 'Jogador', pontos: 0 }];
+      }
+      STATE.grupoAtual = 0;
+      STATE.questoes   = shuffle(QUESTOES[STATE.tema].questoes);
+      STATE.questaoIdx = 0;
+      STATE.encerrado  = false;
+      goTo('jogar.html');
+    }
+  </script>
+</body>
+</html>
